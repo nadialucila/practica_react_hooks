@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Memorize } from './components/memos/Memorize';
+import { CallbackHook } from './components/memos/CallbackHook';
+// import { MemoHook } from './components/memos/MemoHook';
+// import { Memorize } from './components/memos/Memorize';
 // import { LayoutEffect } from './components/useLayoutEffect/LayoutEffect';
 // import { MultipleCustomHooks } from './components/ejemplos/MultipleCustomHooks';
 // import { FocusScreen } from './components/useRef/FocusScreen';
@@ -14,6 +16,6 @@ import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <Memorize />
+    <CallbackHook />
 );
 

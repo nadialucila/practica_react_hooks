@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import '../useEffect/effects.css';
-import {useCounter} from '../../hooks/useCounter.js';
 import { Small } from './Small';
+import {useCounter} from '../../hooks/useCounter.js';
+import '../useEffect/effects.css';
 
 export const Memorize = () => {
 
