@@ -1,4 +1,3 @@
-//componente de la lista de tareas
 import React from 'react'
 import PropTypes from 'prop-types';
 import { TodoListItem } from './TodoListItem';
