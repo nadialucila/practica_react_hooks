@@ -1,80 +1,75 @@
-import React, { useReducer } from 'react'
+import React, { useEffect, useReducer } from 'react'
 import { todoReducer } from './todoReducer';
 import { useForm }from '../../hooks/useForm.js';
 import './styles.css';
+import TodoList from './TodoList';
 
-//hacemos un pequeño estado inicial para empezar la todo
-const initialState = [{
-    id: new Date().getTime(),
-    desc: 'aprender react',
-    done: false
-}]
+const init = () => {
+    return JSON.parse( localStorage.getItem('todos') ) || [];           //esto tendria que venir de una db en realidad
+}
 
 export const TodoApp = () => {
 
-    //usamos el hook useReducer, el mismo pide un reducer y un estado inicial, luego va a devolver el estado (todos)
+    //usamos el hook useReducer, el mismo pide un reducer y un estado inicial " [] " y el init que me trae los todos, luego va a devolver el estado (todos)
     // y una funcion dispatch para manejar las acciones
-    const [todos, dispatch] = useReducer(todoReducer, initialState);
+    const [todos, dispatch] = useReducer(todoReducer, [], init);
 
     //tremos el custom hook useForm para que maneje el cambio en el input
     //vamos a necesitar una description que es para la tarea, la funcion para manejar el input y un reset para que se borre el input despues
     const [{description}, handleInputChange, reset ] = useForm({
-        description: '' //le avisamos al form que va a tener un attr description
+        description: ''               //le avisamos al form que va a tener un attr description
     });
+
+    useEffect( () => {
+        localStorage.setItem( 'todos', JSON.stringify(todos) );
+    }, [ todos ] );
+
+    const handleDelete = (todoId) => {
+        dispatch( {
+            type: 'delete',
+            payload: todoId
+        });
+    }
+
+    const handleUpdate = (todoId) => {
+        dispatch({
+            type: 'update',
+            payload: todoId
+        });
+    }
 
     //funcion para manejar el submit del form de las to-dos
     const handleSubmit = (e) => {
+
         e.preventDefault();
 
-        //validacion para no meter tareas vacias
-        if(description.trim().length <= 1) {
-            return;
-        }
+        if(description.trim().length <= 1) return;
 
-        //maqueta de lo que seria la nueva tarea, tiene como id el tiempo actual, como desc la descripcion que obtenemos del input
-        //y un done que arranca en false por defecto
-        const newTodo = {
-            id: new Date().getTime(),
-            desc: description,
-            done: false
-        };
-
-        //con la action type add indicamos que es una accion para añadir una nueva tarea, y el payload que es el obj
-        //va a ser la tarea creada anteriormente
-        const action = {
+        dispatch({
             type: 'add',
-            payload: newTodo
-        }
+            payload: {                          //objeto de nueva tarea en el payload.
+                id: new Date().getTime(),
+                desc: description,             //la descripcion viene del input
+                done: false
+            }
+        });
 
-        //aca es donde usamos la funcion dispatch y le metemos la action, para que mande la accion al reducer correspondiente
-        //y dependiendo el type haga lo que tenga que hacer con el payload
-        dispatch(action);
-        //uso el reset para limpiar el formulario
         reset();
     }
 
     return (
         <div>
-            <h1> Todo-App ( {todos.length} ) </h1>
+            <h1> Lista de tareas ( {todos.length} ) </h1>
             <hr/>
             <div className='row'>
                 <div className='col-7'>
-                    <ul className='list-group'>
-                        {
-                            todos.map( (tarea) => (
-                                <li
-                                    key= {tarea.id}
-                                    className='list-group-item'
-                                    >
-                                    <p className='text-center'> { tarea.desc } </p>
-                                    <button className='btn btn-danger'> x </button>
-                                </li>
-                            ))
-                        }
-                    </ul>
+                    <TodoList 
+                            todos={todos}
+                            handleDelete={handleDelete}
+                            handleUpdate={handleUpdate}/>
                 </div>
                 <div className='col'>
-                    <h4> Agregar To-Do: </h4>
+                    <h4> Agregar tarea: </h4>
                     <hr/>
                     <form onSubmit={ handleSubmit }>
                         <input
@@ -85,16 +80,16 @@ export const TodoApp = () => {
                             autoComplete='off'
                             className='form-control'
                             onChange={ handleInputChange }
-                        />
+                            />
                         <button
                             type='submit'
                             className='btn btn-success mt-1 btn-block'
-                        >
+                            >
                             Agregar
                         </button>
                     </form>
                 </div>
             </div>
         </div>
-    )
+    );
 }

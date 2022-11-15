@@ -1,16 +1,21 @@
-//este es el reducer, aca vamos a recibir un estado actual, una accion y va a devolver un nuevo estado dependiendo de como le afecte la accion
-export const todoReducer = (state=[], action ) => {
-    //se suele hacer un switch para elegir los types de la action
+export const todoReducer = ( state=[], action ) => {
+
     switch (action.type) {
         case 'add':
-            //se suele retornar el estado anterior desestrucutrado y el nuevo payload, al menos en el caso de agregar
             return [
                 ...state,
-                action.payload
-            ]
+                action.payload //se suele retornar el estado anterior desestrucutrado y el nuevo payload, al menos en el caso de agregar
+            ];
 
-        //por default devolvemos el estado tal cual se recibe
+        case 'delete':
+            return state.filter( todo => todo.id !== action.payload ); //hacemos un filtro exceptuando el todo que tenga el id que pase por payload
+
+        case 'update':
+            return state.map( todo =>
+                ( todo.id === action.payload) ?
+                {...todo, done: !todo.done} : todo)
+
         default:
-            return state;
+            return state; //por default devolvemos el estado tal cual se recibe
     }
 }
