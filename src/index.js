@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { MainApp } from './components/useContext/MainApp';
 // import { CallbackHook } from './components/memos/CallbackHook';
-import { TodoApp } from './components/useReducer/TodoApp';
+// import { TodoApp } from './components/useReducer/TodoApp';
 // import { MemoHook } from './components/memos/MemoHook';
 // import { Memorize } from './components/memos/Memorize';
 // import { LayoutEffect } from './components/useLayoutEffect/LayoutEffect';
@@ -17,7 +18,7 @@ import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <TodoApp />
+    <MainApp />
 );
 
 
